@@ -1,6 +1,6 @@
 package com.hfad.exchangerates.model
 
-data class CurRate(
+data class Rate(
     val Cur_Abbreviation: String? = null,
     val Cur_ID: Int? = null,
     val Cur_Name: String? = null,

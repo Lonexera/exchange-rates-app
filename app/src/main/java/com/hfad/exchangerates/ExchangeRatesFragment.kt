@@ -1,7 +1,6 @@
 package com.hfad.exchangerates
 
 import android.app.DatePickerDialog
-import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -35,7 +34,6 @@ class ExchangeRatesFragment : Fragment() {
     }
 
     private lateinit var communicator: FragmentCommunicator
-    private val dateFormatterAPI = DateTimeFormatter.ISO_LOCAL_DATE
     private val dateFormatterTV = DateTimeFormatter.ofPattern("dd.MM.yyyy")
 
     private val today = LocalDate.now()
@@ -51,7 +49,7 @@ class ExchangeRatesFragment : Fragment() {
         with(binding) {
             recycler.setHasFixedSize(true)
             recycler.layoutManager = LinearLayoutManager(activity)
-            recycler.adapter = RatesAdapter(inflater.context, mutableListOf())
+            recycler.adapter = RatesAdapter(inflater.context, mutableListOf(), true)
             showRatesForDate(today)
         }
 
@@ -106,8 +104,12 @@ class ExchangeRatesFragment : Fragment() {
         }
         if (date.isBefore(today)) {
             enableToolBarNavigationButton()
+            communicator.getAllRates(binding.recycler, date, false)
         }
-        communicator.getAllRates(binding.recycler, date.format(dateFormatterAPI))
+        if (date == today) {
+            disableToolBarNavigationButton()
+            communicator.getAllRates(binding.recycler, date, true)
+        }
         binding.toolbar.title = date.format(dateFormatterTV)
     }
 

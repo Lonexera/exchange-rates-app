@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/action_pick_date"
+        android:icon="@drawable/ic_baseline_date_picker_24"
+        android:title="Pick a date"
+        android:contentDescription="Pick a date"
+        app:showAsAction="ifRoom"/>
+
+
+</menu>

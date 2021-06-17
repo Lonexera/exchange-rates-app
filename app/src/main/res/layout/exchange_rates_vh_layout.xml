@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="16dp"
+        android:checkable="true"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <TextView
+                android:id="@+id/currency_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="USD"
+                android:textSize="36sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout_editor_absoluteX="170dp"
+                tools:layout_editor_absoluteY="63dp" />
+
+            <TextView
+                android:id="@+id/currency_full_ru_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="Доллар США"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/currency_name"
+                tools:layout_editor_absoluteX="170dp"
+                tools:layout_editor_absoluteY="63dp" />
+
+            <TextView
+                android:id="@+id/currency_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="3.04"
+                android:textSize="30sp"
+                app:layout_constraintBottom_toBottomOf="@id/currency_name"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/currency_name"
+                app:layout_constraintVertical_bias="0.523"
+                tools:layout_editor_absoluteX="309dp" />
+
+            <TextView
+                android:id="@+id/price_change"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0.002"
+                android:textColor="@color/green"
+                app:layout_constraintEnd_toStartOf="@id/up_down_price_iv"
+                app:layout_constraintTop_toBottomOf="@id/currency_price"
+                tools:layout_editor_absoluteX="286dp"
+                tools:layout_editor_absoluteY="100dp" />
+
+            <ImageView
+                android:id="@+id/up_down_price_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@id/price_change"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/price_change"
+                app:srcCompat="@drawable/ic_baseline_arrow_drop_down_24"
+                tools:layout_editor_absoluteX="345dp"
+                tools:layout_editor_absoluteY="100dp" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

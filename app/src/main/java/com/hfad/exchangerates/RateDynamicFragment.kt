@@ -52,7 +52,7 @@ class RateDynamicFragment : Fragment() {
         communicator = activity as FragmentCommunicator
         val today = LocalDate.now()
         val monthAgo = LocalDate.of(today.year, today.month - 1, today.dayOfMonth )
-        communicator.getRatesShortList(curId!!, monthAgo, today, binding.liveChart)
+        communicator.getRatesShortList(curId!!, monthAgo, today, binding.chart)
 
 
         return binding.root

@@ -1,6 +1,7 @@
 package com.hfad.exchangerates.`interface`
 
 import androidx.recyclerview.widget.RecyclerView
+import com.github.mikephil.charting.charts.LineChart
 import com.hfad.exchangerates.adapter.RatesAdapter
 import com.hfad.exchangerates.model.RateShort
 import com.yabu.livechart.view.LiveChart
@@ -11,5 +12,5 @@ interface FragmentCommunicator {
     fun getAllRates(recycler: RecyclerView, date: LocalDate, withChanges: Boolean)
     fun closeApp()
     fun openDynamicFragment(curId: Int, curAbbreviation: String)
-    fun getRatesShortList(curId: Int, startDate: LocalDate, endDate: LocalDate, livechart: LiveChart)
+    fun getRatesShortList(curId: Int, startDate: LocalDate, endDate: LocalDate, livechart: LineChart)
 }

@@ -2,10 +2,14 @@ package com.hfad.exchangerates
 
 import android.app.AlertDialog
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
 import com.hfad.exchangerates.`interface`.FragmentCommunicator
 import com.hfad.exchangerates.`interface`.RetrofitServices
 import com.hfad.exchangerates.adapter.RatesAdapter
@@ -13,9 +17,6 @@ import com.hfad.exchangerates.common.Common
 import com.hfad.exchangerates.databinding.ActivityMainBinding
 import com.hfad.exchangerates.model.Rate
 import com.hfad.exchangerates.model.RateShort
-import com.yabu.livechart.model.DataPoint
-import com.yabu.livechart.model.Dataset
-import com.yabu.livechart.view.LiveChart
 import dmax.dialog.SpotsDialog
 import retrofit2.Call
 import retrofit2.Callback
@@ -138,7 +139,7 @@ class MainActivity : AppCompatActivity(), FragmentCommunicator {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override fun getRatesShortList(curId: Int, startDate: LocalDate, endDate: LocalDate, livechart: LiveChart) {
+    override fun getRatesShortList(curId: Int, startDate: LocalDate, endDate: LocalDate, livechart: LineChart) {
         //println("$curId + ${startDate.format(DateTimeFormatter.ISO_LOCAL_DATE)} ${endDate.format(DateTimeFormatter.BASIC_ISO_DATE)}")
         mService.getRatesShortList(curId.toString(),
             startDate.format(DateTimeFormatter.ISO_LOCAL_DATE),
@@ -153,26 +154,26 @@ class MainActivity : AppCompatActivity(), FragmentCommunicator {
                     response: Response<MutableList<RateShort>>
                 ) {
                     val rateShortList = response.body() as MutableList<RateShort>
-                    val dataPoints = formatRatesListToDataPoints(rateShortList)
-                    val dataset = Dataset(dataPoints.toMutableList())
+                    val entries = formatRatesListToDataPoints(rateShortList)
+                    val dataset = LineDataSet(entries, "")
+                    dataset.color = R.color.black
+                    dataset.valueTextColor = R.color.design_default_color_primary_dark
 
-                    livechart.setDataset(dataset)
-                        .drawYBounds()
-                        .drawBaseline()
-                        .drawFill()
-                        .drawDataset()
+                    val lineData = LineData(dataset)
+                    livechart.data = lineData
+                    livechart.invalidate()
                 }
             })
     }
 
-    private fun formatRatesListToDataPoints(ratesShortList: List<RateShort>) : List<DataPoint> {
-        val dataPoints: MutableList<DataPoint> = mutableListOf()
+    private fun formatRatesListToDataPoints(ratesShortList: List<RateShort>) : List<Entry> {
+        val entries: MutableList<Entry> = mutableListOf()
 
         ratesShortList.forEachIndexed { index, rate ->
-            dataPoints.add(DataPoint(index.toFloat(), rate.Cur_OfficialRate!!.toFloat()))
+            entries.add(Entry(index.toFloat(), rate.Cur_OfficialRate!!.toFloat()))
         }
 
-        return dataPoints
+        return entries
     }
 
 }

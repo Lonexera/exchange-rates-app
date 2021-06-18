@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.hfad.exchangerates.R
+import com.hfad.exchangerates.`interface`.FragmentCommunicator
 import com.hfad.exchangerates.databinding.ExchangeRatesVhLayoutBinding
 import com.hfad.exchangerates.model.Rate
 
@@ -15,9 +16,10 @@ class RatesAdapter(private val context: Context, var ratesMap: List<Pair<Rate, D
     private val isWithChanges: Boolean)
     : RecyclerView.Adapter<RatesAdapter.RatesViewHolder>() {
 
+    private val communicator: FragmentCommunicator = context as FragmentCommunicator
+
     inner class RatesViewHolder(val binding: ExchangeRatesVhLayoutBinding)
-        : RecyclerView.ViewHolder(binding.root){
-    }
+        : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RatesViewHolder {
         val binding = ExchangeRatesVhLayoutBinding
@@ -49,6 +51,10 @@ class RatesAdapter(private val context: Context, var ratesMap: List<Pair<Rate, D
                     upDownPriceIv.visibility = View.GONE
                 }
             }
+        }
+
+        holder.binding.cardView.setOnClickListener {
+            communicator.openDynamicFragment(rate.Cur_ID!!, holder.binding.currencyName.text.toString())
         }
     }
 

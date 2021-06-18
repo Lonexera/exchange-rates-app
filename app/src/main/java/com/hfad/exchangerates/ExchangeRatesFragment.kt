@@ -20,10 +20,10 @@ import java.time.format.DateTimeFormatter
 @RequiresApi(Build.VERSION_CODES.O)
 class ExchangeRatesFragment : Fragment() {
 
-    companion object {
+    private var _binding: FragmentExchangeRatesBinding? = null
+    private val binding get() = _binding!!
 
-        private var _binding: FragmentExchangeRatesBinding? = null
-        private val binding get() = _binding!!
+    companion object {
 
         @JvmStatic
         fun newInstance() : ExchangeRatesFragment {
@@ -49,7 +49,7 @@ class ExchangeRatesFragment : Fragment() {
         with(binding) {
             recycler.setHasFixedSize(true)
             recycler.layoutManager = LinearLayoutManager(activity)
-            recycler.adapter = RatesAdapter(inflater.context, mutableListOf(), true)
+            recycler.adapter = RatesAdapter(requireActivity(), mutableListOf(), true)
             showRatesForDate(today)
         }
 

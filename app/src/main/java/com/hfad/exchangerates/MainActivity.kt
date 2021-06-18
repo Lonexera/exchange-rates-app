@@ -12,6 +12,10 @@ import com.hfad.exchangerates.adapter.RatesAdapter
 import com.hfad.exchangerates.common.Common
 import com.hfad.exchangerates.databinding.ActivityMainBinding
 import com.hfad.exchangerates.model.Rate
+import com.hfad.exchangerates.model.RateShort
+import com.yabu.livechart.model.DataPoint
+import com.yabu.livechart.model.Dataset
+import com.yabu.livechart.view.LiveChart
 import dmax.dialog.SpotsDialog
 import retrofit2.Call
 import retrofit2.Callback
@@ -80,18 +84,15 @@ class MainActivity : AppCompatActivity(), FragmentCommunicator {
                         override fun onResponse(call: Call<MutableList<Rate>>,
                             response: Response<MutableList<Rate>>) {
                             oldRatesList = response.body() as MutableList<Rate>
-                            val adapter = RatesAdapter(baseContext,
-                                formListOfPairs(ratesList, oldRatesList), true)
-                            recycler.adapter = adapter
-                            adapter.notifyDataSetChanged()
+                            updateAdapter(recycler, formListOfPairs(ratesList, oldRatesList),
+                                true)
+                            dismissProgressDialog()
                         }
                     })
                 } else {
-                    val adapter = RatesAdapter(baseContext, formListOfPairs(ratesList), false)
-                    recycler.adapter = adapter
-                    adapter.notifyDataSetChanged()
+                    updateAdapter(recycler, formListOfPairs(ratesList), false)
+                    dismissProgressDialog()
                 }
-                dismissProgressDialog()
             }
         })
     }
@@ -115,8 +116,63 @@ class MainActivity : AppCompatActivity(), FragmentCommunicator {
         return newList
     }
 
+    private fun updateAdapter(recycler: RecyclerView, ratesList: List<Pair<Rate, Double>>,
+                              withChanges: Boolean) {
+        val adapter = RatesAdapter(this@MainActivity,
+            ratesList, withChanges)
+        recycler.adapter = adapter
+        adapter.notifyDataSetChanged()
+    }
+
     override fun closeApp() {
         finish()
+    }
+
+    override fun openDynamicFragment(curId: Int, curAbbreviation: String) {
+        val fragment = RateDynamicFragment.newInstance(curId, curAbbreviation)
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.fragment_container, fragment)
+        transaction.addToBackStack(null)
+        transaction.setReorderingAllowed(true)
+        transaction.commit()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun getRatesShortList(curId: Int, startDate: LocalDate, endDate: LocalDate, livechart: LiveChart) {
+        //println("$curId + ${startDate.format(DateTimeFormatter.ISO_LOCAL_DATE)} ${endDate.format(DateTimeFormatter.BASIC_ISO_DATE)}")
+        mService.getRatesShortList(curId.toString(),
+            startDate.format(DateTimeFormatter.ISO_LOCAL_DATE),
+            endDate.format(DateTimeFormatter.ISO_LOCAL_DATE))
+            .enqueue(object : Callback<MutableList<RateShort>> {
+                override fun onFailure(call: Call<MutableList<RateShort>>, t: Throwable) {
+                    TODO("Not yet implemented")
+                }
+
+                override fun onResponse(
+                    call: Call<MutableList<RateShort>>,
+                    response: Response<MutableList<RateShort>>
+                ) {
+                    val rateShortList = response.body() as MutableList<RateShort>
+                    val dataPoints = formatRatesListToDataPoints(rateShortList)
+                    val dataset = Dataset(dataPoints.toMutableList())
+
+                    livechart.setDataset(dataset)
+                        .drawYBounds()
+                        .drawBaseline()
+                        .drawFill()
+                        .drawDataset()
+                }
+            })
+    }
+
+    private fun formatRatesListToDataPoints(ratesShortList: List<RateShort>) : List<DataPoint> {
+        val dataPoints: MutableList<DataPoint> = mutableListOf()
+
+        ratesShortList.forEachIndexed { index, rate ->
+            dataPoints.add(DataPoint(index.toFloat(), rate.Cur_OfficialRate!!.toFloat()))
+        }
+
+        return dataPoints
     }
 
 }

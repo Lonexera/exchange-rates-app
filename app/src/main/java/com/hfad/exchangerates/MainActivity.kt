@@ -5,14 +5,16 @@ import android.os.Build
 import android.os.Bundle
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.hfad.exchangerates.`interface`.FragmentCommunicator
 import com.hfad.exchangerates.`interface`.RetrofitServices
-import com.hfad.exchangerates.adapter.RatesAdapter
+import com.hfad.exchangerates.adapter.RatesAdapterToday
 import com.hfad.exchangerates.common.Common
 import com.hfad.exchangerates.databinding.ActivityMainBinding
 import com.hfad.exchangerates.model.Rate
@@ -23,6 +25,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+
 
 class MainActivity : AppCompatActivity(), FragmentCommunicator {
 
@@ -119,7 +122,7 @@ class MainActivity : AppCompatActivity(), FragmentCommunicator {
 
     private fun updateAdapter(recycler: RecyclerView, ratesList: List<Pair<Rate, Double>>,
                               withChanges: Boolean) {
-        val adapter = RatesAdapter(this@MainActivity,
+        val adapter = RatesAdapterToday(this@MainActivity,
             ratesList, withChanges)
         recycler.adapter = adapter
         adapter.notifyDataSetChanged()
@@ -158,10 +161,17 @@ class MainActivity : AppCompatActivity(), FragmentCommunicator {
                     val dataset = LineDataSet(entries, "")
                     dataset.color = R.color.black
                     dataset.valueTextColor = R.color.design_default_color_primary_dark
+                    dataset.setDrawCircles(false)
 
                     val lineData = LineData(dataset)
+                    lineData.setDrawValues(false)
                     livechart.data = lineData
-                    livechart.invalidate()
+
+                    val l: Legend = livechart.legend
+                    l.form = Legend.LegendForm.NONE
+                    livechart.isVisible = true
+                    livechart.animateX(1000)
+                    //livechart.invalidate()
                 }
             })
     }

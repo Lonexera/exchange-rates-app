@@ -2,9 +2,6 @@ package com.hfad.exchangerates.`interface`
 
 import androidx.recyclerview.widget.RecyclerView
 import com.github.mikephil.charting.charts.LineChart
-import com.hfad.exchangerates.adapter.RatesAdapter
-import com.hfad.exchangerates.model.RateShort
-import com.yabu.livechart.view.LiveChart
 import java.time.LocalDate
 
 interface FragmentCommunicator {

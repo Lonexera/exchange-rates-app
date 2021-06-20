@@ -12,7 +12,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hfad.exchangerates.`interface`.FragmentCommunicator
-import com.hfad.exchangerates.adapter.RatesAdapter
+import com.hfad.exchangerates.adapter.RatesAdapterToday
 import com.hfad.exchangerates.databinding.FragmentExchangeRatesBinding
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -49,7 +49,7 @@ class ExchangeRatesFragment : Fragment() {
         with(binding) {
             recycler.setHasFixedSize(true)
             recycler.layoutManager = LinearLayoutManager(activity)
-            recycler.adapter = RatesAdapter(requireActivity(), mutableListOf(), true)
+            recycler.adapter = RatesAdapterToday(requireActivity(), mutableListOf(), true)
             showRatesForDate(today)
         }
 

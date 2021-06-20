@@ -1,18 +1,15 @@
 package com.hfad.exchangerates
 
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
+import androidx.fragment.app.Fragment
 import com.hfad.exchangerates.`interface`.FragmentCommunicator
-import com.hfad.exchangerates.databinding.FragmentExchangeRatesBinding
 import com.hfad.exchangerates.databinding.FragmentRateDynamicBinding
-import com.hfad.exchangerates.model.RateShort
-import com.yabu.livechart.model.DataPoint
-import com.yabu.livechart.model.Dataset
 import java.time.LocalDate
 
 class RateDynamicFragment : Fragment() {
@@ -54,6 +51,11 @@ class RateDynamicFragment : Fragment() {
         val monthAgo = LocalDate.of(today.year, today.month - 1, today.dayOfMonth )
         communicator.getRatesShortList(curId!!, monthAgo, today, binding.chart)
 
+        with(binding) {
+            chart.setBackgroundColor(Color.WHITE)
+            chart.description.isEnabled = false
+            chart.setDrawGridBackground(false)
+        }
 
         return binding.root
     }

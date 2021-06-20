@@ -12,9 +12,9 @@ import com.hfad.exchangerates.`interface`.FragmentCommunicator
 import com.hfad.exchangerates.databinding.ExchangeRatesVhLayoutBinding
 import com.hfad.exchangerates.model.Rate
 
-class RatesAdapter(private val context: Context, var ratesMap: List<Pair<Rate, Double>>,
-    private val isWithChanges: Boolean)
-    : RecyclerView.Adapter<RatesAdapter.RatesViewHolder>() {
+class RatesAdapterToday(private val context: Context, var ratesMap: List<Pair<Rate, Double>>,
+                        private val isWithChanges: Boolean)
+    : RecyclerView.Adapter<RatesAdapterToday.RatesViewHolder>() {
 
     private val communicator: FragmentCommunicator = context as FragmentCommunicator
 
@@ -41,11 +41,21 @@ class RatesAdapter(private val context: Context, var ratesMap: List<Pair<Rate, D
                         rateChange *= -1
                         upDownPriceIv.setImageResource(R.drawable.ic_baseline_arrow_drop_down_24)
                         priceChange.setTextColor(Color.GREEN)
-                    } else {
+                    }
+                    if (rateChange > 0) {
                         upDownPriceIv.setImageResource(R.drawable.ic_baseline_arrow_drop_up_24)
                         priceChange.setTextColor(Color.RED)
                     }
+                    if (rateChange.toInt() == 0) {
+                        upDownPriceIv.setImageResource(R.drawable.pause_rotate)
+                        priceChange.setTextColor(Color.GRAY)
+                    }
                     priceChange.text = rateChange.format(3)
+
+
+                    holder.binding.cardView.setOnClickListener {
+                        communicator.openDynamicFragment(rate.Cur_ID!!, holder.binding.currencyName.text.toString())
+                    }
                 } else {
                     priceChange.visibility = View.GONE
                     upDownPriceIv.visibility = View.GONE
@@ -53,9 +63,6 @@ class RatesAdapter(private val context: Context, var ratesMap: List<Pair<Rate, D
             }
         }
 
-        holder.binding.cardView.setOnClickListener {
-            communicator.openDynamicFragment(rate.Cur_ID!!, holder.binding.currencyName.text.toString())
-        }
     }
 
     override fun getItemCount(): Int = ratesMap.size

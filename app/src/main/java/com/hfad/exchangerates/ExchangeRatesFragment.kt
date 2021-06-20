@@ -1,6 +1,8 @@
 package com.hfad.exchangerates
 
+import android.app.AlertDialog
 import android.app.DatePickerDialog
+import android.app.Dialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -13,6 +15,11 @@ import com.hfad.exchangerates.`interface`.FragmentCommunicator
 import com.hfad.exchangerates.adapter.RatesAdapterOtherDay
 import com.hfad.exchangerates.adapter.RatesAdapterToday
 import com.hfad.exchangerates.databinding.FragmentExchangeRatesBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.lang.Exception
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -99,20 +106,38 @@ class ExchangeRatesFragment : Fragment() {
         }
         if (date.isBefore(today)) {
             enableToolBarNavigationButton()
-            val adapter = RatesAdapterOtherDay( requireActivity(),
-                communicator.getAllRatesForOtherDay(date))
-            binding.recycler.adapter = adapter
-            adapter.notifyDataSetChanged()
+            GlobalScope.launch(Dispatchers.IO) {
+                try {
+                    val ratesList = communicator.getAllRatesForOtherDay(date)
+                    withContext(Dispatchers.Main){
+                        val adapter = RatesAdapterOtherDay(requireActivity(),
+                            ratesList)
+                        binding.recycler.adapter = adapter
+                        adapter.notifyDataSetChanged()
+                        hideProgressBar()
+                    }
+                } catch (e: Exception) {
+                    println("fucker")
+                }}
         }
         if (date == today) {
             disableToolBarNavigationButton()
-            val adapter = RatesAdapterToday(requireActivity(),
-                communicator.getAllRatesForToday(date))
-            binding.recycler.adapter = adapter
-            adapter.notifyDataSetChanged()
+            GlobalScope.launch(Dispatchers.IO) {
+                try {
+                    val ratesList = communicator.getAllRatesForToday(date)
+                    withContext(Dispatchers.Main){
+                        val adapter = RatesAdapterToday(requireActivity(),
+                            ratesList)
+                        binding.recycler.adapter = adapter
+                        adapter.notifyDataSetChanged()
+                        hideProgressBar()
+                    }
+                } catch (e: Exception) {
+                    println("fucker")
+                }}
         }
         binding.toolbar.title = date.format(dateFormatterTV)
-        hideProgressBar()
+
     }
 
     private fun showProgressBar() {

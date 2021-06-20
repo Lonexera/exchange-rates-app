@@ -8,9 +8,9 @@ import java.time.LocalDate
 
 interface FragmentCommunicator {
 
-    fun getAllRatesForToday(date: LocalDate) : List<Pair<Rate, Double>>
-    fun getAllRatesForOtherDay(date: LocalDate) : List<Rate>
+    suspend fun getAllRatesForToday(date: LocalDate) : List<Pair<Rate, Double>>
+    suspend fun getAllRatesForOtherDay(date: LocalDate) : List<Rate>
     fun closeApp()
     fun openDynamicFragment(curId: Int, curAbbreviation: String)
-    fun getRatesShortList(curId: Int, startDate: LocalDate, endDate: LocalDate) : List<RateShort>
+    suspend fun getRatesShortList(curId: Int, startDate: LocalDate, endDate: LocalDate) : List<RateShort>
 }

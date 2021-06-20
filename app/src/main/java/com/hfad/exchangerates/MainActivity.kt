@@ -1,13 +1,16 @@
 package com.hfad.exchangerates
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.hfad.exchangerates.`interface`.FragmentCommunicator
 import com.hfad.exchangerates.databinding.ActivityMainBinding
 import com.hfad.exchangerates.model.Rate
 import com.hfad.exchangerates.model.RateShort
 import com.hfad.exchangerates.retrofit.APIClient
+import java.lang.Exception
 import java.time.LocalDate
+import kotlinx.coroutines.*
 
 
 class MainActivity : AppCompatActivity(), FragmentCommunicator {
@@ -36,20 +39,13 @@ class MainActivity : AppCompatActivity(), FragmentCommunicator {
         transaction.commit()
     }
 
-    override fun getAllRatesForToday(date: LocalDate): List<Pair<Rate, Double>> {
-        var todayRateList = mutableListOf<Pair<Rate, Double>>()
-        apiClient.getAllRatesForToday(date) { ratesList ->
-            todayRateList = ratesList.toMutableList() }
-
-        return todayRateList
+    override suspend fun getAllRatesForToday(date: LocalDate): List<Pair<Rate, Double>> {
+        return apiClient.getAllRatesForToday(date)
     }
 
-    override fun getAllRatesForOtherDay(date: LocalDate): List<Rate> {
-        var otherDayRateList = mutableListOf<Rate>()
-        apiClient.getAllRatesForOtherDay(date) { ratesList ->
-            otherDayRateList = ratesList.toMutableList() }
-
-        return otherDayRateList
+    override suspend fun getAllRatesForOtherDay(date: LocalDate): List<Rate> {
+        //var otherDayRateList = mutableListOf<Rate>()
+        return apiClient.getAllRatesForOtherDay(date).toMutableList()
     }
 
     override fun closeApp() {
@@ -65,16 +61,12 @@ class MainActivity : AppCompatActivity(), FragmentCommunicator {
         transaction.commit()
     }
 
-    override fun getRatesShortList(
+    override suspend fun getRatesShortList(
         curId: Int,
         startDate: LocalDate,
         endDate: LocalDate
     ): List<RateShort> {
-        var ratesList = mutableListOf<RateShort>()
-        apiClient.getRatesShortList(curId, startDate, endDate) { rateShortList ->
-            ratesList = rateShortList.toMutableList() }
-
-        return ratesList
+        return apiClient.getRatesShortList(curId, startDate, endDate)
     }
 
 

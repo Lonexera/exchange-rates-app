@@ -11,8 +11,14 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.hfad.exchangerates.`interface`.FragmentCommunicator
+import com.hfad.exchangerates.adapter.RatesAdapterOtherDay
 import com.hfad.exchangerates.databinding.FragmentRateDynamicBinding
 import com.hfad.exchangerates.model.RateShort
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.lang.Exception
 import java.time.LocalDate
 
 class RateDynamicFragment : Fragment() {
@@ -67,12 +73,19 @@ class RateDynamicFragment : Fragment() {
         showProgressBar()
         val today = LocalDate.now()
         val monthAgo = LocalDate.of(today.year, today.month - 1, today.dayOfMonth )
-        val ratesList = communicator.getRatesShortList(curId!!, monthAgo, today)
-        createChart(formatRatesListToEntries(ratesList))
 
+        GlobalScope.launch(Dispatchers.IO) {
+            try {
+                val rateShortList = communicator.getRatesShortList(curId!!, monthAgo, today)
+                withContext(Dispatchers.Main){
+                    createChart(formatRatesListToEntries(rateShortList))
 
-        binding.chart.animateX(1000)
-        hideProgressBar()
+                    binding.chart.animateX(1000)
+                    hideProgressBar()
+                }
+            } catch (e: Exception) {
+                println("fucker")
+            }}
 
     }
 

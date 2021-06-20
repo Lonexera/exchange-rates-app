@@ -12,14 +12,13 @@ import com.hfad.exchangerates.`interface`.FragmentCommunicator
 import com.hfad.exchangerates.databinding.ExchangeRatesVhLayoutBinding
 import com.hfad.exchangerates.model.Rate
 
-class RatesAdapterToday(private val context: Context, var ratesMap: List<Pair<Rate, Double>>,
-                        private val isWithChanges: Boolean)
-    : RecyclerView.Adapter<RatesAdapterToday.RatesViewHolder>() {
+class RatesAdapterToday(private val context: Context, var ratesMap: List<Pair<Rate, Double>>) :
+    RecyclerView.Adapter<RatesAdapterToday.RatesViewHolder>() {
 
     private val communicator: FragmentCommunicator = context as FragmentCommunicator
 
-    inner class RatesViewHolder(val binding: ExchangeRatesVhLayoutBinding)
-        : RecyclerView.ViewHolder(binding.root)
+    inner class RatesViewHolder(val binding: ExchangeRatesVhLayoutBinding) :
+        RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RatesViewHolder {
         val binding = ExchangeRatesVhLayoutBinding
@@ -35,31 +34,30 @@ class RatesAdapterToday(private val context: Context, var ratesMap: List<Pair<Ra
                 currencyFullRuName.text = rate.Cur_Name
                 currencyPrice.text = rate.Cur_OfficialRate.toString()
 
-                if (isWithChanges) {
-                    var rateChange = ratesMap[position].second
-                    if (rateChange < 0) {
-                        rateChange *= -1
-                        upDownPriceIv.setImageResource(R.drawable.ic_baseline_arrow_drop_down_24)
-                        priceChange.setTextColor(Color.GREEN)
-                    }
-                    if (rateChange > 0) {
-                        upDownPriceIv.setImageResource(R.drawable.ic_baseline_arrow_drop_up_24)
-                        priceChange.setTextColor(Color.RED)
-                    }
-                    if (rateChange.toInt() == 0) {
-                        upDownPriceIv.setImageResource(R.drawable.pause_rotate)
-                        priceChange.setTextColor(Color.GRAY)
-                    }
-                    priceChange.text = rateChange.format(3)
-
-
-                    holder.binding.cardView.setOnClickListener {
-                        communicator.openDynamicFragment(rate.Cur_ID!!, holder.binding.currencyName.text.toString())
-                    }
-                } else {
-                    priceChange.visibility = View.GONE
-                    upDownPriceIv.visibility = View.GONE
+                var rateChange = ratesMap[position].second
+                if (rateChange < 0) {
+                    rateChange *= -1
+                    upDownPriceIv.setImageResource(R.drawable.ic_baseline_arrow_drop_down_24)
+                    priceChange.setTextColor(Color.GREEN)
                 }
+                if (rateChange > 0) {
+                    upDownPriceIv.setImageResource(R.drawable.ic_baseline_arrow_drop_up_24)
+                    priceChange.setTextColor(Color.RED)
+                }
+                if (rateChange.toInt() == 0) {
+                    upDownPriceIv.setImageResource(R.drawable.pause_rotate)
+                    priceChange.setTextColor(Color.GRAY)
+                }
+                priceChange.text = rateChange.format(3)
+
+
+                holder.binding.cardView.setOnClickListener {
+                    communicator.openDynamicFragment(
+                        rate.Cur_ID!!,
+                        holder.binding.currencyName.text.toString()
+                    )
+                }
+
             }
         }
 

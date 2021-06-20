@@ -5,14 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.hfad.exchangerates.`interface`.FragmentCommunicator
 import com.hfad.exchangerates.databinding.ExchangeRatesVhLayoutBinding
 import com.hfad.exchangerates.model.Rate
 
 class RatesAdapterOtherDay(private val context: Context, var rates: List<Rate>)
     : RecyclerView.Adapter<RatesAdapterOtherDay.RatesOtherDayViewHolder>() {
 
-    private val communicator: FragmentCommunicator = context as FragmentCommunicator
 
     inner class RatesOtherDayViewHolder(val binding: ExchangeRatesVhLayoutBinding)
         : RecyclerView.ViewHolder(binding.root) {

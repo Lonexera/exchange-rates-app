@@ -1,7 +1,6 @@
 package com.hfad.exchangerates
 
 import android.app.DatePickerDialog
-import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,19 +8,23 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hfad.exchangerates.`interface`.FragmentCommunicator
+import com.hfad.exchangerates.adapter.RatesAdapterOtherDay
 import com.hfad.exchangerates.adapter.RatesAdapterToday
 import com.hfad.exchangerates.databinding.FragmentExchangeRatesBinding
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-@RequiresApi(Build.VERSION_CODES.O)
 class ExchangeRatesFragment : Fragment() {
 
     private var _binding: FragmentExchangeRatesBinding? = null
     private val binding get() = _binding!!
+
+    private lateinit var communicator: FragmentCommunicator
+    private val dateFormatterTV = DateTimeFormatter.ofPattern("dd.MM.yyyy")
+
+    private val today = LocalDate.now()
 
     companion object {
 
@@ -33,27 +36,11 @@ class ExchangeRatesFragment : Fragment() {
         }
     }
 
-    private lateinit var communicator: FragmentCommunicator
-    private val dateFormatterTV = DateTimeFormatter.ofPattern("dd.MM.yyyy")
-
-    private val today = LocalDate.now()
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentExchangeRatesBinding.inflate(inflater, container, false)
-
-        communicator = activity as FragmentCommunicator
-
-        with(binding) {
-            recycler.setHasFixedSize(true)
-            recycler.layoutManager = LinearLayoutManager(activity)
-            recycler.adapter = RatesAdapterToday(requireActivity(), mutableListOf(), true)
-            showRatesForDate(today)
-        }
-
-        disableToolBarNavigationButton()
         return binding.root
     }
 
@@ -64,6 +51,10 @@ class ExchangeRatesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        communicator = activity as FragmentCommunicator
+
+        disableToolBarNavigationButton()
 
         with(binding) {
             toolbar.setOnMenuItemClickListener { menuItem ->
@@ -81,11 +72,14 @@ class ExchangeRatesFragment : Fragment() {
                     else -> false
                 }
             }
-
-
             toolbar.setNavigationOnClickListener {
                 onBackPressed()
             }
+
+            recycler.setHasFixedSize(true)
+            recycler.layoutManager = LinearLayoutManager(activity)
+            recycler.adapter = RatesAdapterToday(requireActivity(), mutableListOf())
+            showRatesForDate(today)
         }
 
         val callback = object : OnBackPressedCallback(true) {
@@ -97,6 +91,7 @@ class ExchangeRatesFragment : Fragment() {
     }
 
     private fun showRatesForDate(date: LocalDate) {
+        showProgressBar()
         if (date.isAfter(today)) {
             Toast.makeText(activity, "We can't predict rates!", Toast.LENGTH_SHORT)
                 .show()
@@ -104,13 +99,34 @@ class ExchangeRatesFragment : Fragment() {
         }
         if (date.isBefore(today)) {
             enableToolBarNavigationButton()
-            communicator.getAllRates(binding.recycler, date, false)
+            val adapter = RatesAdapterOtherDay( requireActivity(),
+                communicator.getAllRatesForOtherDay(date))
+            binding.recycler.adapter = adapter
+            adapter.notifyDataSetChanged()
         }
         if (date == today) {
             disableToolBarNavigationButton()
-            communicator.getAllRates(binding.recycler, date, true)
+            val adapter = RatesAdapterToday(requireActivity(),
+                communicator.getAllRatesForToday(date))
+            binding.recycler.adapter = adapter
+            adapter.notifyDataSetChanged()
         }
         binding.toolbar.title = date.format(dateFormatterTV)
+        hideProgressBar()
+    }
+
+    private fun showProgressBar() {
+        with(binding) {
+            recycler.visibility = View.GONE
+            progressBarRecycler.visibility = View.VISIBLE
+        }
+    }
+
+    private fun hideProgressBar() {
+        with(binding) {
+            progressBarRecycler.visibility = View.GONE
+            recycler.visibility = View.VISIBLE
+        }
     }
 
     private fun disableToolBarNavigationButton() {

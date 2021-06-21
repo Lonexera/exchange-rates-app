@@ -1,12 +1,12 @@
 package com.hfad.exchangerates
 
+import android.annotation.SuppressLint
 import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.github.mikephil.charting.components.Legend
@@ -22,6 +22,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.lang.Exception
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 class RateDynamicFragment : Fragment() {
 
@@ -29,6 +30,7 @@ class RateDynamicFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var communicator: FragmentCommunicator
     private var curId: Int = 0
+    private var curAbbreviation = ""
 
     companion object {
 
@@ -65,7 +67,8 @@ class RateDynamicFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.toolbarRateDynamic.title = arguments?.getString(CUR_ABBREVIATION) ?: ""
+        curAbbreviation = arguments?.getString(CUR_ABBREVIATION) ?: ""
+        binding.toolbarRateDynamic.title = curAbbreviation
 
         curId = arguments?.getInt(CUR_ID, 0)!!
 
@@ -80,6 +83,9 @@ class RateDynamicFragment : Fragment() {
         showProgressBar()
         val today = LocalDate.now()
         val monthAgo = LocalDate.of(today.year, today.month - 1, today.dayOfMonth )
+
+        setTextToTextView(today.format(DateTimeFormatter.ISO_LOCAL_DATE),
+            monthAgo.format(DateTimeFormatter.ISO_LOCAL_DATE))
 
         GlobalScope.launch(Dispatchers.IO) {
             try {
@@ -100,14 +106,24 @@ class RateDynamicFragment : Fragment() {
     private fun showProgressBar() {
         with(binding) {
             chart.visibility = View.GONE
+            rateDynamicTextview.visibility = View.GONE
             progressBarDynamicFrg.visibility = View.VISIBLE
         }
     }
     private fun hideProgressBar() {
         with(binding) {
             progressBarDynamicFrg.visibility = View.GONE
+            rateDynamicTextview.visibility = View.VISIBLE
             chart.visibility = View.VISIBLE
         }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun setTextToTextView(todayStr: String, monthAgoDay: String) {
+        binding.rateDynamicTextview.text = resources.getString(R.string.rate_dynamic_text_part_1) +
+                " $curAbbreviation" + resources.getString(R.string.rate_dynamic_text_part_2) +
+                " $monthAgoDay " + resources.getString(R.string.rate_dynamic_text_part_3) +
+                " $todayStr"
     }
 
     private fun createChart(entries: List<Entry>) {

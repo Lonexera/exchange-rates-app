@@ -66,7 +66,7 @@ class ExchangeRatesFragment : Fragment() {
             toolbar.setOnMenuItemClickListener { menuItem ->
                 when(menuItem.itemId) {
                     R.id.action_pick_date -> {
-                        val datePickerDialog = DatePickerDialog(view.context)
+                        val datePickerDialog = DatePickerDialog(view.context, R.style.DatePickerTheme)
                         datePickerDialog.setOnDateSetListener { view, year, month, dayOfMonth ->
                             val date = LocalDate.of(year, month + 1, dayOfMonth)
                             showRatesForDate(date)

@@ -29,8 +29,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:text="USD"
-                android:textSize="36sp"
+                android:textSize="30sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:layout_editor_absoluteX="170dp"
@@ -38,35 +37,28 @@
 
             <TextView
                 android:id="@+id/currency_full_ru_name"
-                android:layout_width="wrap_content"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:text="Доллар США"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/currency_name"
-                tools:layout_editor_absoluteX="170dp"
-                tools:layout_editor_absoluteY="63dp" />
+                app:layout_constraintTop_toBottomOf="@id/currency_name" />
 
             <TextView
                 android:id="@+id/currency_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
-                android:text="3.04"
-                android:textSize="30sp"
+                android:textSize="24sp"
                 app:layout_constraintBottom_toBottomOf="@id/currency_name"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/currency_name"
-                app:layout_constraintVertical_bias="0.523"
                 tools:layout_editor_absoluteX="309dp" />
 
             <TextView
                 android:id="@+id/price_change"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0.002"
-                android:textColor="@color/green"
                 app:layout_constraintEnd_toStartOf="@id/up_down_price_iv"
                 app:layout_constraintTop_toBottomOf="@id/currency_price"
                 tools:layout_editor_absoluteX="286dp"

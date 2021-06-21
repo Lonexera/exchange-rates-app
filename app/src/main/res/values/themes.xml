@@ -28,4 +28,14 @@
         <item name="android:textColorPrimary">@color/white</item>
     </style>
 
+
+    <style name="DatePickerTheme" parent="@style/ThemeOverlay.AppCompat.Dialog.Alert">
+        <item name="showTitle">false</item>
+        <item name="colorAccent">@color/primary</item>
+        <item name="colorControlActivated">@color/p_dark</item>
+        <item name="android:selectableItemBackgroundBorderless">@color/white</item>
+        <item name="colorControlHighlight">@color/p_light</item>
+        <item name="android:textColorSecondary">@color/p_light</item>
+    </style>
+
 </resources>

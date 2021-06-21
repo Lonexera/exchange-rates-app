@@ -1,8 +1,7 @@
 package com.hfad.exchangerates
 
-import android.app.AlertDialog
 import android.app.DatePickerDialog
-import android.app.Dialog
+import android.content.DialogInterface
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -98,13 +97,14 @@ class ExchangeRatesFragment : Fragment() {
     }
 
     private fun showRatesForDate(date: LocalDate) {
-        showProgressBar()
+        println("lolo")
         if (date.isAfter(today)) {
             Toast.makeText(activity, "We can't predict rates!", Toast.LENGTH_SHORT)
                 .show()
             return
         }
         if (date.isBefore(today)) {
+            showProgressBar()
             enableToolBarNavigationButton()
             GlobalScope.launch(Dispatchers.IO) {
                 try {
@@ -117,10 +117,13 @@ class ExchangeRatesFragment : Fragment() {
                         hideProgressBar()
                     }
                 } catch (e: Exception) {
-                    println("fucker")
+                    withContext(Dispatchers.Main) {
+                        showAlert(date)
+                    }
                 }}
         }
         if (date == today) {
+            showProgressBar()
             disableToolBarNavigationButton()
             GlobalScope.launch(Dispatchers.IO) {
                 try {
@@ -133,7 +136,9 @@ class ExchangeRatesFragment : Fragment() {
                         hideProgressBar()
                     }
                 } catch (e: Exception) {
-                    println("fucker")
+                    withContext(Dispatchers.Main) {
+                        showAlert(date)
+                    }
                 }}
         }
         binding.toolbar.title = date.format(dateFormatterTV)
@@ -167,6 +172,19 @@ class ExchangeRatesFragment : Fragment() {
             showRatesForDate(today)
             disableToolBarNavigationButton()
         } else communicator.closeApp()
+    }
+
+    private fun showAlert(date: LocalDate) {
+        val builderAlert = androidx.appcompat.app.AlertDialog.Builder(requireActivity())
+        builderAlert.setTitle("ERROR")
+        builderAlert.setMessage("Cannot load the data!")
+        builderAlert.setPositiveButton("Try again") { _: DialogInterface, _: Int ->
+            showRatesForDate(date)
+        }
+        builderAlert.setNegativeButton("Close app") { _: DialogInterface, _: Int ->
+            communicator.closeApp()
+        }
+        builderAlert.show()
     }
 
 

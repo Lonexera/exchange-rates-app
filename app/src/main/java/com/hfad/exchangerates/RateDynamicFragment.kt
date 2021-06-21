@@ -1,17 +1,19 @@
 package com.hfad.exchangerates
 
+import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.hfad.exchangerates.`interface`.FragmentCommunicator
-import com.hfad.exchangerates.adapter.RatesAdapterOtherDay
 import com.hfad.exchangerates.databinding.FragmentRateDynamicBinding
 import com.hfad.exchangerates.model.RateShort
 import kotlinx.coroutines.Dispatchers
@@ -26,6 +28,7 @@ class RateDynamicFragment : Fragment() {
     private var _binding: FragmentRateDynamicBinding? = null
     private val binding get() = _binding!!
     private lateinit var communicator: FragmentCommunicator
+    private var curId: Int = 0
 
     companion object {
 
@@ -64,19 +67,23 @@ class RateDynamicFragment : Fragment() {
 
         binding.toolbarRateDynamic.title = arguments?.getString(CUR_ABBREVIATION) ?: ""
 
-        val curId = arguments?.getInt(CUR_ID, 0)
+        curId = arguments?.getInt(CUR_ID, 0)!!
 
         communicator = activity as FragmentCommunicator
 
         binding.toolbarRateDynamic.setNavigationOnClickListener { onBackPressed() }
 
+        setChart()
+    }
+
+    private fun setChart() {
         showProgressBar()
         val today = LocalDate.now()
         val monthAgo = LocalDate.of(today.year, today.month - 1, today.dayOfMonth )
 
         GlobalScope.launch(Dispatchers.IO) {
             try {
-                val rateShortList = communicator.getRatesShortList(curId!!, monthAgo, today)
+                val rateShortList = communicator.getRatesShortList(curId, monthAgo, today)
                 withContext(Dispatchers.Main){
                     createChart(formatRatesListToEntries(rateShortList))
 
@@ -84,9 +91,10 @@ class RateDynamicFragment : Fragment() {
                     hideProgressBar()
                 }
             } catch (e: Exception) {
-                println("fucker")
+                withContext(Dispatchers.Main) {
+                    showAlert()
+                }
             }}
-
     }
 
     private fun showProgressBar() {
@@ -135,4 +143,19 @@ class RateDynamicFragment : Fragment() {
     private fun onBackPressed() {
         activity?.supportFragmentManager?.popBackStack()
     }
+
+
+    private fun showAlert() {
+        val builderAlert = AlertDialog.Builder(requireActivity())
+        builderAlert.setTitle("ERROR")
+        builderAlert.setMessage("Cannot load the data!")
+        builderAlert.setPositiveButton("Try again") { _: DialogInterface, _: Int ->
+            setChart()
+        }
+        builderAlert.setNegativeButton("Close app") { _: DialogInterface, _: Int ->
+            communicator.closeApp()
+        }
+        builderAlert.show()
+    }
+
 }

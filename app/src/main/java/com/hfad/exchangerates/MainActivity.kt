@@ -1,16 +1,13 @@
 package com.hfad.exchangerates
 
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.hfad.exchangerates.`interface`.FragmentCommunicator
 import com.hfad.exchangerates.databinding.ActivityMainBinding
 import com.hfad.exchangerates.model.Rate
 import com.hfad.exchangerates.model.RateShort
 import com.hfad.exchangerates.retrofit.APIClient
-import java.lang.Exception
 import java.time.LocalDate
-import kotlinx.coroutines.*
 
 
 class MainActivity : AppCompatActivity(), FragmentCommunicator {

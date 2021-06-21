@@ -97,7 +97,6 @@ class ExchangeRatesFragment : Fragment() {
     }
 
     private fun showRatesForDate(date: LocalDate) {
-        println("lolo")
         if (date.isAfter(today)) {
             Toast.makeText(activity, "We can't predict rates!", Toast.LENGTH_SHORT)
                 .show()
@@ -147,6 +146,7 @@ class ExchangeRatesFragment : Fragment() {
 
     private fun showProgressBar() {
         with(binding) {
+            ratesScrollView.visibility = View.GONE
             recycler.visibility = View.GONE
             progressBarRecycler.visibility = View.VISIBLE
         }
@@ -155,7 +155,9 @@ class ExchangeRatesFragment : Fragment() {
     private fun hideProgressBar() {
         with(binding) {
             progressBarRecycler.visibility = View.GONE
+            ratesScrollView.visibility = View.VISIBLE
             recycler.visibility = View.VISIBLE
+
         }
     }
 

@@ -50,7 +50,6 @@ class APIClient {
             : List<Pair<Rate, Double>> {
         val newList: MutableList<Pair<Rate, Double>> = mutableListOf()
 
-        //TODO make a date
         todaysList.forEachIndexed {index, rate ->
             newList.add(Pair(rate, (rate.Cur_OfficialRate!! - yesterdaysList[index].Cur_OfficialRate!!)))
         }

@@ -113,9 +113,8 @@ class RateDynamicFragment : Fragment() {
     private fun createChart(entries: List<Entry>) {
         with(binding) {
             val dataset = LineDataSet(entries, "")
-            dataset.color = R.color.black
-            dataset.valueTextColor = R.color.design_default_color_primary_dark
             dataset.setDrawCircles(false)
+            dataset.color = R.color.p_dark
 
             val lineData = LineData(dataset)
             lineData.setDrawValues(false)

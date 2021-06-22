@@ -39,12 +39,11 @@ class RatesAdapterToday(private val context: Context, var ratesMap: List<Pair<Ra
                     rateChange *= -1
                     upDownPriceIv.setImageResource(R.drawable.ic_baseline_arrow_drop_down_24)
                     priceChange.setTextColor(Color.GREEN)
-                }
-                if (rateChange > 0) {
+                } else if (rateChange > 0) {
                     upDownPriceIv.setImageResource(R.drawable.ic_baseline_arrow_drop_up_24)
                     priceChange.setTextColor(Color.RED)
                 }
-                if (rateChange.toInt() == 0) {
+                if (rateChange == 0.0) {
                     upDownPriceIv.setImageResource(R.drawable.pause_rotate)
                     priceChange.setTextColor(Color.GRAY)
                 }

@@ -43,11 +43,12 @@ class RatesAdapterToday(private val context: Context, var ratesMap: List<Pair<Ra
                     upDownPriceIv.setImageResource(R.drawable.ic_baseline_arrow_drop_up_24)
                     priceChange.setTextColor(Color.RED)
                 }
-                if (rateChange == 0.0) {
+                val priceChangeStr = rateChange.format(3)
+                if (priceChangeStr == "0,000") {
                     upDownPriceIv.setImageResource(R.drawable.pause_rotate)
                     priceChange.setTextColor(Color.GRAY)
                 }
-                priceChange.text = rateChange.format(3)
+                priceChange.text = priceChangeStr
 
 
                 holder.binding.cardView.setOnClickListener {

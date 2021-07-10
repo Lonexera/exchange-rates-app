@@ -22,7 +22,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.lang.Exception
 import java.time.LocalDate
-import java.time.Month
 import java.time.format.DateTimeFormatter
 
 class RateDynamicFragment : Fragment() {
@@ -83,7 +82,7 @@ class RateDynamicFragment : Fragment() {
     private fun setChart() {
         showProgressBar()
         val today = LocalDate.now()
-        val monthAgo = LocalDate.of(today.year, today.month - 1, today.dayOfMonth )
+        val monthAgo = today.minusMonths(1)
 
         setTextToTextView(today.format(DateTimeFormatter.ISO_LOCAL_DATE),
             monthAgo.format(DateTimeFormatter.ISO_LOCAL_DATE))

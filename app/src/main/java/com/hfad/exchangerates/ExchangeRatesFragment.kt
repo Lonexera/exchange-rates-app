@@ -31,6 +31,7 @@ class ExchangeRatesFragment : Fragment() {
     private val dateFormatterTV = DateTimeFormatter.ofPattern("dd.MM.yyyy")
 
     private val today = LocalDate.now()
+    private var dateToLook = today
 
     companion object {
 
@@ -67,9 +68,13 @@ class ExchangeRatesFragment : Fragment() {
                 when(menuItem.itemId) {
                     R.id.action_pick_date -> {
                         val datePickerDialog = DatePickerDialog(view.context, R.style.DatePickerTheme)
+                        datePickerDialog.updateDate(dateToLook.year,
+                            dateToLook.minusMonths(1).monthValue, dateToLook.dayOfMonth)
+
                         datePickerDialog.setOnDateSetListener { view, year, month, dayOfMonth ->
-                            val date = LocalDate.of(year, month + 1, dayOfMonth)
-                            showRatesForDate(date)
+                            dateToLook = LocalDate.of(year, month + 1, dayOfMonth)
+
+                            showRatesForDate(dateToLook)
                             datePickerDialog.dismiss()
                         }
                         datePickerDialog.show()
@@ -173,6 +178,7 @@ class ExchangeRatesFragment : Fragment() {
         if (binding.toolbar.title != today.format(dateFormatterTV)) {
             showRatesForDate(today)
             disableToolBarNavigationButton()
+            dateToLook = today
         } else communicator.closeApp()
     }
 

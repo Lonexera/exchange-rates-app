@@ -1,4 +1,4 @@
-package com.hfad.exchangerates.adapter
+package com.hfad.exchangerates.presentation.ui.exchangerates.adapter
 
 import android.content.Context
 import android.graphics.Color
@@ -7,9 +7,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.hfad.exchangerates.R
-import com.hfad.exchangerates.`interface`.FragmentCommunicator
+import com.hfad.exchangerates.presentation.ui.`interface`.FragmentCommunicator
 import com.hfad.exchangerates.databinding.ExchangeRatesVhLayoutBinding
-import com.hfad.exchangerates.model.Rate
+import com.hfad.exchangerates.domain.model.Rate
 
 class RatesAdapterToday(private val context: Context, var ratesMap: List<Pair<Rate, Double>>) :
     RecyclerView.Adapter<RatesAdapterToday.RatesViewHolder>() {

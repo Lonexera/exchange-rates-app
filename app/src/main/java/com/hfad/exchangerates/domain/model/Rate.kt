@@ -1,4 +1,4 @@
-package com.hfad.exchangerates.model
+package com.hfad.exchangerates.domain.model
 
 data class Rate(
     val Cur_Abbreviation: String? = null,

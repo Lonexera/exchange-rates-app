@@ -1,13 +1,10 @@
-package com.hfad.exchangerates.`interface`
+package com.hfad.exchangerates.presentation.ui.`interface`
 
-import androidx.recyclerview.widget.RecyclerView
-import com.github.mikephil.charting.charts.LineChart
-import com.hfad.exchangerates.model.Rate
-import com.hfad.exchangerates.model.RateShort
+import com.hfad.exchangerates.domain.model.Rate
+import com.hfad.exchangerates.domain.model.RateShort
 import java.time.LocalDate
 
 interface FragmentCommunicator {
-
     suspend fun getAllRatesForToday(date: LocalDate) : List<Pair<Rate, Double>>
     suspend fun getAllRatesForOtherDay(date: LocalDate) : List<Rate>
     fun closeApp()

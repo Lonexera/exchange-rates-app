@@ -1,4 +1,4 @@
-package com.hfad.exchangerates.retrofit
+package com.hfad.exchangerates.data.retrofit
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

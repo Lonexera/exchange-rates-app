@@ -1,4 +1,4 @@
-package com.hfad.exchangerates
+package com.hfad.exchangerates.presentation.ui.ratedynamic
 
 import android.annotation.SuppressLint
 import android.content.DialogInterface
@@ -13,14 +13,14 @@ import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
-import com.hfad.exchangerates.`interface`.FragmentCommunicator
+import com.hfad.exchangerates.R
 import com.hfad.exchangerates.databinding.FragmentRateDynamicBinding
-import com.hfad.exchangerates.model.RateShort
+import com.hfad.exchangerates.domain.model.RateShort
+import com.hfad.exchangerates.presentation.ui.`interface`.FragmentCommunicator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.lang.Exception
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -31,23 +31,6 @@ class RateDynamicFragment : Fragment() {
     private lateinit var communicator: FragmentCommunicator
     private var curId: Int = 0
     private var curAbbreviation = ""
-
-    companion object {
-
-        private const val CUR_ID = "CUR_ID"
-        private const val CUR_ABBREVIATION = "CUR_ABBREVIATION"
-
-        @JvmStatic
-        fun newInstance(curId: Int, curAbbreviation: String) : RateDynamicFragment {
-            val fragment = RateDynamicFragment()
-            val args = Bundle()
-            args.putInt(CUR_ID, curId)
-            args.putString(CUR_ABBREVIATION, curAbbreviation)
-            fragment.arguments = args
-            return fragment
-        }
-
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -84,13 +67,15 @@ class RateDynamicFragment : Fragment() {
         val today = LocalDate.now()
         val monthAgo = today.minusMonths(1)
 
-        setTextToTextView(today.format(DateTimeFormatter.ISO_LOCAL_DATE),
-            monthAgo.format(DateTimeFormatter.ISO_LOCAL_DATE))
+        setTextToTextView(
+            today.format(DateTimeFormatter.ISO_LOCAL_DATE),
+            monthAgo.format(DateTimeFormatter.ISO_LOCAL_DATE)
+        )
 
         GlobalScope.launch(Dispatchers.IO) {
             try {
                 val rateShortList = communicator.getRatesShortList(curId, monthAgo, today)
-                withContext(Dispatchers.Main){
+                withContext(Dispatchers.Main) {
                     createChart(formatRatesListToEntries(rateShortList))
 
                     binding.chart.animateX(1000)
@@ -100,7 +85,8 @@ class RateDynamicFragment : Fragment() {
                 withContext(Dispatchers.Main) {
                     showAlert()
                 }
-            }}
+            }
+        }
     }
 
     private fun showProgressBar() {
@@ -110,6 +96,7 @@ class RateDynamicFragment : Fragment() {
             progressBarDynamicFrg.visibility = View.VISIBLE
         }
     }
+
     private fun hideProgressBar() {
         with(binding) {
             progressBarDynamicFrg.visibility = View.GONE
@@ -145,20 +132,19 @@ class RateDynamicFragment : Fragment() {
         }
     }
 
-    private fun formatRatesListToEntries(ratesShortList: List<RateShort>) : List<Entry> {
-           val entries: MutableList<Entry> = mutableListOf()
+    private fun formatRatesListToEntries(ratesShortList: List<RateShort>): List<Entry> {
+        val entries: MutableList<Entry> = mutableListOf()
 
-           ratesShortList.forEachIndexed { index, rate ->
-               entries.add(Entry(index.toFloat(), rate.Cur_OfficialRate!!.toFloat()))
-           }
+        ratesShortList.forEachIndexed { index, rate ->
+            entries.add(Entry(index.toFloat(), rate.Cur_OfficialRate!!.toFloat()))
+        }
 
-           return entries
-       }
+        return entries
+    }
 
     private fun onBackPressed() {
         activity?.supportFragmentManager?.popBackStack()
     }
-
 
     private fun showAlert() {
         val builderAlert = AlertDialog.Builder(requireActivity())
@@ -173,4 +159,19 @@ class RateDynamicFragment : Fragment() {
         builderAlert.show()
     }
 
+    companion object {
+
+        private const val CUR_ID = "CUR_ID"
+        private const val CUR_ABBREVIATION = "CUR_ABBREVIATION"
+
+        @JvmStatic
+        fun newInstance(curId: Int, curAbbreviation: String): RateDynamicFragment {
+            val fragment = RateDynamicFragment()
+            val args = Bundle()
+            args.putInt(CUR_ID, curId)
+            args.putString(CUR_ABBREVIATION, curAbbreviation)
+            fragment.arguments = args
+            return fragment
+        }
+    }
 }

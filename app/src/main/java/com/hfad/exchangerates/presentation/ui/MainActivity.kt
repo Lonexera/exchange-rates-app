@@ -1,12 +1,15 @@
-package com.hfad.exchangerates
+package com.hfad.exchangerates.presentation.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.hfad.exchangerates.`interface`.FragmentCommunicator
+import com.hfad.exchangerates.presentation.ui.exchangerates.ExchangeRatesFragment
+import com.hfad.exchangerates.R
+import com.hfad.exchangerates.presentation.ui.ratedynamic.RateDynamicFragment
+import com.hfad.exchangerates.presentation.ui.`interface`.FragmentCommunicator
 import com.hfad.exchangerates.databinding.ActivityMainBinding
-import com.hfad.exchangerates.model.Rate
-import com.hfad.exchangerates.model.RateShort
-import com.hfad.exchangerates.retrofit.APIClient
+import com.hfad.exchangerates.domain.model.Rate
+import com.hfad.exchangerates.domain.model.RateShort
+import com.hfad.exchangerates.data.retrofit.APIClient
 import java.time.LocalDate
 
 
@@ -14,7 +17,6 @@ class MainActivity : AppCompatActivity(), FragmentCommunicator {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var apiClient: APIClient
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,7 +30,7 @@ class MainActivity : AppCompatActivity(), FragmentCommunicator {
     }
 
     private fun showExchangeRatesFragment() {
-        val fragment = ExchangeRatesFragment.newInstance()
+        val fragment = ExchangeRatesFragment()
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.fragment_container, fragment)
         //transaction.addToBackStack(null)
@@ -65,6 +67,4 @@ class MainActivity : AppCompatActivity(), FragmentCommunicator {
     ): List<RateShort> {
         return apiClient.getRatesShortList(curId, startDate, endDate)
     }
-
-
 }

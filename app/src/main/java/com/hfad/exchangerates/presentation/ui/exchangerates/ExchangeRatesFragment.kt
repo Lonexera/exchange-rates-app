@@ -1,4 +1,4 @@
-package com.hfad.exchangerates
+package com.hfad.exchangerates.presentation.ui.exchangerates
 
 import android.app.DatePickerDialog
 import android.content.DialogInterface
@@ -10,9 +10,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.hfad.exchangerates.`interface`.FragmentCommunicator
-import com.hfad.exchangerates.adapter.RatesAdapterOtherDay
-import com.hfad.exchangerates.adapter.RatesAdapterToday
+import com.hfad.exchangerates.R
+import com.hfad.exchangerates.presentation.ui.`interface`.FragmentCommunicator
+import com.hfad.exchangerates.presentation.ui.exchangerates.adapter.RatesAdapterOtherDay
+import com.hfad.exchangerates.presentation.ui.exchangerates.adapter.RatesAdapterToday
 import com.hfad.exchangerates.databinding.FragmentExchangeRatesBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -32,16 +33,6 @@ class ExchangeRatesFragment : Fragment() {
 
     private val today = LocalDate.now()
     private var dateToLook = today
-
-    companion object {
-
-        @JvmStatic
-        fun newInstance() : ExchangeRatesFragment {
-            val fragment = ExchangeRatesFragment()
-
-            return fragment
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -67,7 +58,9 @@ class ExchangeRatesFragment : Fragment() {
             toolbar.setOnMenuItemClickListener { menuItem ->
                 when(menuItem.itemId) {
                     R.id.action_pick_date -> {
-                        val datePickerDialog = DatePickerDialog(view.context, R.style.DatePickerTheme)
+                        val datePickerDialog = DatePickerDialog(view.context,
+                            R.style.DatePickerTheme
+                        )
                         datePickerDialog.updateDate(dateToLook.year,
                             dateToLook.minusMonths(1).monthValue, dateToLook.dayOfMonth)
 
@@ -114,8 +107,7 @@ class ExchangeRatesFragment : Fragment() {
                 try {
                     val ratesList = communicator.getAllRatesForOtherDay(date)
                     withContext(Dispatchers.Main){
-                        val adapter = RatesAdapterOtherDay(requireActivity(),
-                            ratesList)
+                        val adapter = RatesAdapterOtherDay(ratesList)
                         binding.recycler.adapter = adapter
                         adapter.notifyDataSetChanged()
                         hideProgressBar()
@@ -162,7 +154,6 @@ class ExchangeRatesFragment : Fragment() {
             progressBarRecycler.visibility = View.GONE
             ratesScrollView.visibility = View.VISIBLE
             recycler.visibility = View.VISIBLE
-
         }
     }
 
@@ -194,6 +185,4 @@ class ExchangeRatesFragment : Fragment() {
         }
         builderAlert.show()
     }
-
-
 }

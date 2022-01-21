@@ -11,7 +11,7 @@
         android:largeHeap="true"
         android:theme="@style/Theme.ExchangeRates">
 
-        <activity android:name=".MainActivity"
+        <activity android:name=".presentation.ui.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

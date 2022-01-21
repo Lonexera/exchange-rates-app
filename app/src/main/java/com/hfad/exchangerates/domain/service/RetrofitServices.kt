@@ -1,14 +1,13 @@
-package com.hfad.exchangerates.`interface`
+package com.hfad.exchangerates.domain.service
 
-import com.hfad.exchangerates.model.Rate
-import com.hfad.exchangerates.model.RateShort
+import com.hfad.exchangerates.domain.model.Rate
+import com.hfad.exchangerates.domain.model.RateShort
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface RetrofitServices {
-
     @GET("exrates/rates")
     fun getRatesList(@Query("ondate") date: String,
                      @Query("periodicity") periodicity: Int): Call<MutableList<Rate>>

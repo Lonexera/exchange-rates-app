@@ -1,16 +1,14 @@
-package com.hfad.exchangerates.adapter
+package com.hfad.exchangerates.presentation.ui.exchangerates.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.hfad.exchangerates.databinding.ExchangeRatesVhLayoutBinding
-import com.hfad.exchangerates.model.Rate
+import com.hfad.exchangerates.domain.model.Rate
 
-class RatesAdapterOtherDay(private val context: Context, var rates: List<Rate>)
+class RatesAdapterOtherDay(var rates: List<Rate>)
     : RecyclerView.Adapter<RatesAdapterOtherDay.RatesOtherDayViewHolder>() {
-
 
     inner class RatesOtherDayViewHolder(val binding: ExchangeRatesVhLayoutBinding)
         : RecyclerView.ViewHolder(binding.root) {
@@ -42,5 +40,4 @@ class RatesAdapterOtherDay(private val context: Context, var rates: List<Rate>)
     }
 
     override fun getItemCount(): Int = rates.size
-
 }

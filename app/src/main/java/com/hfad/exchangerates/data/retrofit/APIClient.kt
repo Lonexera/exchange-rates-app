@@ -1,17 +1,13 @@
-package com.hfad.exchangerates.retrofit
+package com.hfad.exchangerates.data.retrofit
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import com.hfad.exchangerates.`interface`.RetrofitServices
-import com.hfad.exchangerates.common.Common
-import com.hfad.exchangerates.model.Rate
-import com.hfad.exchangerates.model.RateShort
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.hfad.exchangerates.domain.service.RetrofitServices
+import com.hfad.exchangerates.data.common.Common
+import com.hfad.exchangerates.domain.model.Rate
+import com.hfad.exchangerates.domain.model.RateShort
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-
 
 @RequiresApi(Build.VERSION_CODES.O)
 class APIClient {

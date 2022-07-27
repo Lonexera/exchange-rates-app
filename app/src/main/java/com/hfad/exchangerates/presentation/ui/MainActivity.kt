@@ -47,10 +47,6 @@ class MainActivity : AppCompatActivity(), FragmentCommunicator {
         return apiClient.getAllRatesForOtherDay(date).toMutableList()
     }
 
-    override fun closeApp() {
-        finish()
-    }
-
     override fun openDynamicFragment(curId: Int, curAbbreviation: String) {
         val fragment = RateDynamicFragment.newInstance(curId, curAbbreviation)
         val transaction = supportFragmentManager.beginTransaction()

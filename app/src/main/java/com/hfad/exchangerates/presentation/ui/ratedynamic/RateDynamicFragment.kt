@@ -154,9 +154,14 @@ class RateDynamicFragment : Fragment() {
             setChart()
         }
         builderAlert.setNegativeButton("Close app") { _: DialogInterface, _: Int ->
-            communicator.closeApp()
+            closeApp()
         }
         builderAlert.show()
+    }
+
+    private fun closeApp() {
+        parentFragmentManager.popBackStack()
+        requireActivity().finish()
     }
 
     companion object {
